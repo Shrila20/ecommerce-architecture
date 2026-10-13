@@ -1,0 +1,22 @@
+services:
+  gateway:
+    image: nginx:1.27-alpine
+    ports: ["8080:80"]
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./gateway/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [product-service, order-service, user-service]
+  product-service:
+    build: ./product-service
+    expose: ["8000"]
+  order-service:
+    build: ./order-service
+    expose: ["8000"]
+    volumes: ["orders-data:/data"]
+  user-service:
+    build: ./user-service
+    expose: ["8000"]
+    volumes: ["users-data:/data"]
+volumes:
+  orders-data:
+  users-data:
